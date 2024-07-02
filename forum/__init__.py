@@ -1,10 +1,9 @@
 from flask import Flask
 from .users.routes import users_blueprint
 from .posts.routes import posts_blueprint
-from flask_sqlalchemy import SQLAlchemy
 from forum.exceptions import resource_not_found,resource_sever_error
 from flask_migrate import Migrate
-
+from forum.extensions import db
 
 def register_error_handlers(app):
     app.register_error_handler(404,resource_not_found)
@@ -19,8 +18,7 @@ register_error_handlers(app)
 
 app.config.from_object('config.developconfig')
 
-db = SQLAlchemy(app)
-
+db.init_app(app)
 from .users.models import User # circular import
 
 migrate = Migrate(app, db)
