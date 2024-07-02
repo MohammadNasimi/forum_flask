@@ -18,7 +18,8 @@ register_error_handlers(app)
 app.config.from_object('config.developconfig')
 
 db = SQLAlchemy(app)
-from .users.models import User
+
+from .users.models import User # circular import
 
 with app.app_context():
     db.create_all() # set update model in database when run server
