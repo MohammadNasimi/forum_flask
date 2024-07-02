@@ -3,6 +3,8 @@ from .users.routes import users_blueprint
 from .posts.routes import posts_blueprint
 from flask_sqlalchemy import SQLAlchemy
 from forum.exceptions import resource_not_found,resource_sever_error
+from flask_migrate import Migrate
+
 
 def register_error_handlers(app):
     app.register_error_handler(404,resource_not_found)
@@ -21,6 +23,16 @@ db = SQLAlchemy(app)
 
 from .users.models import User # circular import
 
-with app.app_context():
-    db.create_all() # set update model in database when run server
+migrate = Migrate(app, db)
+
+# with app.app_context():
+#     db.create_all() # set update model in database when run server
     
+
+
+"""
+    migrate database :
+    1. flask --app forum.py db init -> create a migration repository, just one time run 
+    2. flask --app forum.py db migrate -> create file for db models
+    3. flask --app forum.py db upgrade -> add file model to db
+"""
