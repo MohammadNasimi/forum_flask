@@ -1,4 +1,4 @@
-from forum import db
+from forum.extensions import db
 import datetime
 
 class BaseModel(db.Model):

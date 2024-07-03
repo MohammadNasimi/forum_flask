@@ -1,5 +1,5 @@
 from forum.database import BaseModel
-from forum import db
+from forum.extensions import db
 
 class User(BaseModel):
     phone = db.Column(db.String(11), unique=True, nullable=False)
