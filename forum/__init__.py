@@ -2,8 +2,7 @@ from flask import Flask
 from .users.routes import users_blueprint
 from .posts.routes import posts_blueprint
 from forum.exceptions import resource_not_found,resource_sever_error
-from flask_migrate import Migrate
-from forum.extensions import db
+from forum.extensions import db,migrate
 
 def register_error_handlers(app):
     app.register_error_handler(404,resource_not_found)
@@ -20,8 +19,7 @@ app.config.from_object('config.developconfig')
 
 db.init_app(app)
 from .users.models import User # circular import
-
-migrate = Migrate(app, db)
+migrate.init_app(app, db)
 
 # with app.app_context():
 #     db.create_all() # set update model in database when run server
