@@ -10,10 +10,10 @@ class config():
     SECRET_KEY= os.getenv("SECRET_KEY")
 
 class productconfig(config):
-    DEBUG =True
+    DEBUG =False
     SQLALCHEMY_DATABASE_URI = ...
     
     
 class developconfig(config):
-    DEBUG =False
+    DEBUG = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(config.BASE_DIR,'forum.db')
