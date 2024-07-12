@@ -36,15 +36,15 @@ serializer_marshmall.init_app(app)
 # with app.app_context():
 #     db.create_all() # set update model in database when run server
     
-@app.before_request
-def before_request():
-	print('This is before any request')
+# @app.before_request
+# def before_request():
+# 	print('This is before any request')
 
-@app.after_request
-def after_request(response):
-	print('This is after any request')
-	print(response)
-	return response   # middleware
+# @app.after_request
+# def after_request(response):
+# 	print('This is after any request')
+# 	print(response)
+# 	return response   # middleware
 
 """
     migrate database :
