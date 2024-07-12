@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, session,jsonify
-from forum.users.models import User, Code, Follow
+from forum.users.models import User
+from forum.users.models import code as Code
 from forum.users.forms import UserRegistrationForm, UserCodeVerifyForm, UserLoginForm, EmptyForm
 from forum.extensions import db, sms_api
 import random
 import datetime
-
+from flask_login import logout_user,login_user
 
 users_blueprint = Blueprint('users', __name__)
 
@@ -48,3 +49,26 @@ def verify():
 			return jsonify({"message":"get token"})
 
 	return jsonify({"message":"your code is wrong, please try again"})
+
+
+@users_blueprint.route('/login', methods=['post', 'get'])
+def login():
+	form = UserLoginForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(phone=form.phone.data).first()
+		login_user(user)
+		flash('you logged in')
+		return jsonify({"message":"get token"})
+	return jsonify({"message":"log in again data is not currect"})
+
+
+@users_blueprint.route('/logout', methods=['get', 'post'])
+def logout():
+	logout_user()
+	flash('you logged out')
+	return jsonify({"message":"log out"})
+
+
+@users_blueprint.route('/profile')
+def profile():
+	return jsonify({"message":"show users data log in"})
