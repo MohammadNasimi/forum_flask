@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-api = KavenegarAPI(os.getenv("API_key_kave_negar"))
+sms_api = KavenegarAPI(os.getenv("API_key_kave_negar"))
 
 db = SQLAlchemy()
 migrate = Migrate()
