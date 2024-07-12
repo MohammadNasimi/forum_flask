@@ -1,15 +1,10 @@
 from forum.database import BaseModel
-from forum.extensions import db,login_manager
+from forum.extensions import db
 
 
-from flask_login import UserMixin
 
 
-@login_manager.user_loader
-def load_user(user_id):
-	return User.query.get(int(user_id))
-
-class User(BaseModel,UserMixin):
+class User(BaseModel):
     phone = db.Column(db.String(11), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=True)
     username = db.Column(db.String(255), unique=True, nullable=True)
