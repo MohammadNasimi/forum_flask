@@ -7,10 +7,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from flask_login import LoginManager
-login_manager = LoginManager()
+# serializer package
+from flask_marshmallow import Marshmallow
 
 sms_api = KavenegarAPI(os.getenv("API_key_kave_negar"))
 
 db = SQLAlchemy()
 migrate = Migrate()
+serializer_marshmall = Marshmallow()
