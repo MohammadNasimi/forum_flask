@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from flask_login import LoginManager
+login_manager = LoginManager()
 
 sms_api = KavenegarAPI(os.getenv("API_key_kave_negar"))
 
