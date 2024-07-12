@@ -6,10 +6,10 @@ import random
 import datetime
 
 
-blueprint = Blueprint('users', __name__)
+users_blueprint = Blueprint('users', __name__)
 
 
-@blueprint.route('/register', methods=['post', 'get'])
+@users_blueprint.route('/register', methods=['post', 'get'])
 def register():
 	form = UserRegistrationForm()
 	if form.validate_on_submit():
@@ -28,7 +28,7 @@ def register():
 	return jsonify({"message":"phone is uncorrect"})
 
 
-@blueprint.route('/verify', methods=['post', 'get'])
+@users_blueprint.route('/verify', methods=['post', 'get'])
 def verify():
 	user_phone = session.get('user_phone')
 	code = Code.query.filter_by(phone=user_phone).first()
