@@ -15,9 +15,9 @@ class User(BaseModel):
     
     
 class code(BaseModel):
-    code = db.Column(db.Integer)
+    number = db.Column(db.Integer)
     expire_time = db.Column(db.DateTime,nullable=False)
     phone = db.Column(db.String(11), unique=True, nullable=False)
 
     def __repr__(self):
-        return f'phone {self.phone}, code {self.code}'
+        return f'phone {self.phone}, code {self.number}'
