@@ -53,5 +53,5 @@ serializer_marshmall.init_app(app)
     3. flask --app forum.py db upgrade -> add file model to db
     
     # run flask 
-    flask --app run.py run
+    flask --app run.py run --reload
 """
