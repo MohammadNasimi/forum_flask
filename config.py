@@ -12,8 +12,10 @@ class config():
 class productconfig(config):
     DEBUG =False
     SQLALCHEMY_DATABASE_URI = ...
-    
+    JWT_SECRET_KEY = ...
+
     
 class developconfig(config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(config.BASE_DIR,'forum.db')
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
