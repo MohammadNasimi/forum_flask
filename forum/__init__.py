@@ -2,7 +2,7 @@ from flask import Flask
 from .posts.routes import posts_blueprint
 from .users.routes import users_blueprint
 from forum.exceptions import resource_not_found,resource_sever_error
-from forum.extensions import db,migrate,serializer_marshmall
+from forum.extensions import db,migrate,serializer_marshmall,jwt
 from forum.users.models import User,code
 
 def register_error_handlers(app):
@@ -33,6 +33,7 @@ db.init_app(app)
 from .users.models import User # circular import
 migrate.init_app(app, db)
 serializer_marshmall.init_app(app)
+jwt.init_app(app)
 # with app.app_context():
 #     db.create_all() # set update model in database when run server
     
