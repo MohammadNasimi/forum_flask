@@ -9,6 +9,8 @@ from datetime import datetime ,timedelta
 from forum.extensions import db, sms_api
 from .models import code,User
 
+# jwt 
+from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token
 
 users_blueprint = Blueprint('users', __name__)
 
@@ -79,6 +81,12 @@ class CodePhoneView(View):
         except ValidationError as err:
             # Handle validation errors
             return f"Error: {err}", 400
+        def get_token(phone):
+                phone_token = {"phone": phone}
+                access_token = create_access_token(identity=phone_token,expires_delta = timedelta(minutes=10))
+                refresh_token = create_refresh_token(identity=phone_token,expires_delta= timedelta(hours=2))
+                return jsonify(access_token=access_token,refresh_token=refresh_token)
+        
         # check correct code 
         code_phone = code.query.filter_by(phone=session.get('user_phone')).first()
         if code_phone.expire_time < datetime.now():
@@ -92,9 +100,9 @@ class CodePhoneView(View):
                 new_user = User(phone=session.get('user_phone'))
                 db.session.add(new_user)
                 db.session.commit()
-                return jsonify({"message":new_user.phone})
+                return get_token(new_user)
             else:
-                return jsonify({"message":user.phone})
+                return get_token(user.phone)
         
 @users_blueprint.route('/code',methods=['POST'])
 def get_code():
