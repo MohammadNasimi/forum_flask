@@ -37,11 +37,8 @@ class LogInView(MethodView):
         # sms_api.sms_send(params)
         print(rand_num)
         # check exist code in db for create or delete
-        print(bool(code.query.filter_by(phone=phone).first()))
         if bool(code.query.filter_by(phone=phone).first()):
             code_phone = code.query.filter_by(phone=phone).first()
-            print(code_phone.expire_time < datetime.now())
-            print(code_phone.expire_time)
             if not code_phone.expire_time < datetime.now():
                 return jsonify({"message":"can't get code phone try again afew min ago"})
             else:
