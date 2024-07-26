@@ -7,13 +7,17 @@ import random
 from datetime import datetime ,timedelta
 
 from forum.extensions import db, sms_api
-from .models import code,User
+from .models import code,User,Follow
 
 # jwt 
-from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token ,jwt_required ,get_jwt_identity
 
 users_blueprint = Blueprint('users', __name__)
 
+
+def get_current_user():
+    user_id = get_jwt_identity()
+    return User.query.get(user_id)
 
 class LogInView(MethodView):
     
@@ -81,11 +85,11 @@ class CodePhoneView(View):
         except ValidationError as err:
             # Handle validation errors
             return f"Error: {err}", 400
-        def get_token(phone):
-                phone_token = {"phone": phone}
-                access_token = create_access_token(identity=phone_token,expires_delta = timedelta(minutes=10))
-                refresh_token = create_refresh_token(identity=phone_token,expires_delta= timedelta(hours=2))
-                return jsonify(access_token=access_token,refresh_token=refresh_token)
+        def get_token(user):
+                user_token = {"user": user}
+                access_token = create_access_token(identity=user.phone,expires_delta = timedelta(minutes=10))
+                refresh_token = create_refresh_token(identity=user.phone,expires_delta= timedelta(hours=2))
+                return jsonify(access_token=access_token,refresh_token=refresh_token,user_id=user.id)
         
         # check correct code 
         code_phone = code.query.filter_by(phone=session.get('user_phone')).first()
@@ -102,9 +106,39 @@ class CodePhoneView(View):
                 db.session.commit()
                 return get_token(new_user)
             else:
-                return get_token(user.phone)
+                return get_token(user)
         
 @users_blueprint.route('/code',methods=['POST'])
 def get_code():
     # This function is a wrapper for the view class instance
     return CodePhoneView.as_view('CodePhoneView')()
+
+
+
+@users_blueprint.route("/users/list/",methods=["GET"])
+@jwt_required()
+def users_list():
+    users = User.query.all()
+    print(users)
+    list_users = {}
+    for user in users:
+        list_users[user.id] = user.phone
+        
+    return jsonify(list_users)
+
+
+@users_blueprint.route("/follow/<int:user_id>/",methods=["GET"])
+@jwt_required()
+def follow(user_id):
+    current_user = get_current_user()
+    user = User.query.filter_by(id=user_id).first()
+    if user is None:
+        return jsonify({"message":f"user with {user_id} not exist"})
+    if user == current_user:
+        return jsonify({"message":f"you cant follow your self"})
+
+    create_follow  = Follow(follower=current_user,followed=user)
+    db.session.add(create_follow)
+    db.session.commit()
+        
+    return jsonify({"message":f"you follow {user.phone}"})
