@@ -142,3 +142,21 @@ def follow(user_id):
     db.session.commit()
         
     return jsonify({"message":f"you follow {user.phone}"})
+
+
+@users_blueprint.route("/unfollow/<int:user_id>/",methods=["GET"])
+@jwt_required()
+def unfollow(user_id):
+    current_user = get_current_user()
+    user = User.query.filter_by(id=user_id).first()
+    if user is None:
+        return jsonify({"message":f"user with {user_id} not exist"})
+    if user == current_user:
+        return jsonify({"message":f"you cant unfollow your self"})
+    follow = Follow.query.filter_by(follower=current_user,followed=user).first()
+    if follow is None:
+        return jsonify({"message":f"you dont follow {user_id}"})
+    db.session.delete(follow)
+    db.session.commit()
+        
+    return jsonify({"message":f"you unfollow {user.phone}"})
