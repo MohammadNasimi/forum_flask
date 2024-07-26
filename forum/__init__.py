@@ -3,7 +3,7 @@ from .posts.routes import posts_blueprint
 from .users.routes import users_blueprint
 from forum.exceptions import resource_not_found,resource_sever_error
 from forum.extensions import db,migrate,serializer_marshmall,jwt
-from forum.users.models import User,code
+from forum.users.models import User,code,Follow
 
 def register_error_handlers(app):
     app.register_error_handler(404,resource_not_found)
@@ -15,6 +15,7 @@ def register_shell_context(app):
 			'db': db,
 			'User': User,
 			'Code': code,
+			'Follow': Follow,
 		}
 	app.shell_context_processor(shell_context)
 
