@@ -10,6 +10,7 @@ def register_error_handlers(app):
     app.register_error_handler(500,resource_sever_error)
 
 def register_shell_context(app):
+    # flask --app forum.py shell --> shell flask  in cmd 
 	def shell_context():
 		return {
 			'db': db,
